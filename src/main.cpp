@@ -1,15 +1,22 @@
 #include <Arduino.h>
+#include <Adafruit_NeoPixel.h>
 
 #define LED_BUILTIN 2 // ESP32 equivalent of Arduino 13
 
+#define PIN_NEO_PIXEL 26 // The ESP32 pin GPIO26 connected to NeoPixel
+#define NUM_PIXELS 1     // The number of LEDs (pixels) on NeoPixel LED strip
+
 long last = 0;
 boolean light = false;
+
+Adafruit_NeoPixel NeoPixel(NUM_PIXELS, PIN_NEO_PIXEL, NEO_GRB + NEO_KHZ800);
 
 void setup()
 {
   Serial.begin(9600);
   Serial.println("setup");
   pinMode(LED_BUILTIN, OUTPUT);
+  NeoPixel.begin();
 }
 
 void loop()
@@ -23,6 +30,9 @@ void loop()
       digitalWrite(LED_BUILTIN, LOW);
       Serial.print(">led:");
       Serial.println(0);
+
+      NeoPixel.setPixelColor(0, NeoPixel.Color(0, 255, 0));
+      NeoPixel.show();
     }
     else
     {
@@ -30,6 +40,10 @@ void loop()
       digitalWrite(LED_BUILTIN, HIGH);
       Serial.print(">led:");
       Serial.println(1);
+
+      NeoPixel.setPixelColor(0, NeoPixel.Color(255, 0, 0));
+      NeoPixel.show();
+      // NeoPixel.clear(); // to turn off if we need it
     }
     last = now;
   }
